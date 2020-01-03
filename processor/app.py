@@ -1,7 +1,10 @@
-from flask import jsonify, Flask, render_template, send_file
+from flask import jsonify, Flask, render_template, send_file, url_for
 from flask_restful import Resource, Api, reqparse
 import werkzeug, os
 from werkzeug.utils import secure_filename
+
+from redis import StrictRedis
+r = StrictRedis(host='redis', charset="utf-8", decode_responses=True, db=2)
 
 app = Flask(__name__, template_folder='.')
 api = Api(app)
@@ -21,7 +24,8 @@ def allowed_file(filename):
            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 from my_yolo import process
-from io import BytesIO
+
+from uuid import uuid4
 
 class FileUpload(Resource):
     def post(self):
@@ -34,8 +38,18 @@ class FileUpload(Resource):
             # process the upload immediately
             input_data = file.read()
             complete, data = process(input_data)
-            data = BytesIO(data) 
-            return send_file(data, mimetype='image/jpeg')
+            
+            # Create a filename randomly:
+            filename = uuid4().__str__()
+            with open(os.path.join(UPLOAD_FOLDER, filename),'wb') as f:
+                f.write(data)
+
+            # Save filenames in redis list.  we can then access
+            # this for validation in the other route.
+
+            r.lpush('files', filename)
+
+            return jsonify({'id': url_for('view', id=filename)})
         else:
             return 'not allowed', 403
 
@@ -43,16 +57,8 @@ api.add_resource(FileUpload, '/upload')
 
 @app.route('/view/<string:id>')
 def view(id):
-    job = fetch(id)
-    if job.get_status()=='finished':
-        completed, data = job.result
-        if completed:
-            data = BytesIO(data)
-            return send_file(data, mimetype='image/jpeg')
-        else:
-            return 'job failed in processing', 200
-    else:
-        return 'processing', 404
+    file = r.lget
+      return send_file(data, mimetype='image/jpeg')
 
 @app.route('/', methods=['GET'])
 def index():

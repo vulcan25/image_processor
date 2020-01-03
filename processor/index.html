@@ -20,27 +20,18 @@
     { url: "/upload",
   });
 
-myDropzone.on('success', function (file, response) {
-  
-  var img = document.createElement('img');  
-  var _URL = window.URL || window.webkitURL;
-  
-  const blob = new Blob([response]);	
-  //img.src=_URL.createObjectURL(blob);
-	
-  var reader = new FileReader();
-  reader.readAsDataURL(blob);
-  reader.onloadend = function() {
-    var base64data = reader.result;
-    img.src=base64data;
 
-    var ul = document.getElementById('list' );
-    li = document.createElement('li') 
-    li.appendChild(img)
-    ul.appendChild(li);
-  }
-});
-
+   myDropzone.on('success', function (file, response) {
+	// My crappy javascript skillz:
+	var ul = document.getElementById('list' );
+        li = document.createElement('li');
+	var img = document.createElement('img');  
+	   
+        img.src = response['id'];	
+	   
+	li.appendChild(img);
+	ul.appendChild(li);
+   });
 
 
   </script>
