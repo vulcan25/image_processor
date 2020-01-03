@@ -1,0 +1,48 @@
+<html>
+<head>
+  <title> Dropzone</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.5.0/dropzone.css" integrity="sha256-0Z6mOrdLEtgqvj7tidYQnCYWG3G2GAIpatAWKhDx+VM=" crossorigin="anonymous" />
+</head>
+<body>
+  <form method='POST'
+        enctype="multipart/form-data"
+        class="dropzone"
+        id="my-awesome-dropzone">
+  </form>
+  <ul id='list'>
+  </ul>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.5.0/dropzone.js" integrity="sha256-NLit4Z57jz8npRHkopjfr68hSZY1x/ruN0T8kf68xq4=" crossorigin="anonymous"></script>
+  
+  <script type='text/javascript'>
+  	Dropzone.autoDiscover = false;
+  	var myDropzone = new Dropzone("form#my-awesome-dropzone",
+    { url: "/upload",
+  });
+
+myDropzone.on('success', function (file, response) {
+  
+  var img = document.createElement('img');  
+  var _URL = window.URL || window.webkitURL;
+  
+  const blob = new Blob([response]);	
+  //img.src=_URL.createObjectURL(blob);
+	
+  var reader = new FileReader();
+  reader.readAsDataURL(blob);
+  reader.onloadend = function() {
+    var base64data = reader.result;
+    img.src=base64data;
+
+    var ul = document.getElementById('list' );
+    li = document.createElement('li') 
+    li.appendChild(img)
+    ul.appendChild(li);
+  }
+});
+
+
+
+  </script>
+</body>
+</html>

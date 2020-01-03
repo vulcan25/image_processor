@@ -1,0 +1,27 @@
+version: '3'
+
+services:
+  redis:
+    image: redis:alpine
+
+  processor:
+    #image: image_processor
+    build:
+      context: ./processor/
+      dockerfile: Dockerfile
+    command: rqworker -u redis://redis
+    
+    depends_on:
+      - 'redis'
+    deploy:
+      replicas: 2
+  flask:
+    #image: flask-front
+    build:
+      context: ./flask/
+      dockerfile: Dockerfile
+    tty: True
+    ports:
+      - '5000:5000'
+    #command: flask run -h 0.0.0.0
+    command: gunicorn --bind '0.0.0.0:5000' app:app
