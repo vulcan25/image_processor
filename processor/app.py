@@ -44,21 +44,25 @@ class FileUpload(Resource):
             with open(os.path.join(UPLOAD_FOLDER, filename),'wb') as f:
                 f.write(data)
 
-            # Save filenames in redis list.  we can then access
+            # Save filenames in redis set.  we can then access
             # this for validation in the other route.
 
-            r.lpush('files', filename)
+            r.sadd('files', filename)
 
-            return jsonify({'id': url_for('view', id=filename)})
+            return jsonify({'id': url_for('view', filename=filename)})
         else:
             return 'not allowed', 403
 
 api.add_resource(FileUpload, '/upload')
 
-@app.route('/view/<string:id>')
-def view(id):
-    file = r.lget
-      return send_file(data, mimetype='image/jpeg')
+from flask import stream_with_context, Response
+
+@app.route('/view/<string:filename>')
+def view(filename):
+    if not r.sismember('files', filename):
+        abort(404)
+    else:
+        return send_file(os.path.join(UPLOAD_FOLDER, filename), mimetype='image/jpeg')
 
 @app.route('/', methods=['GET'])
 def index():
