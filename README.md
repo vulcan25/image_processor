@@ -83,6 +83,9 @@ Viewing this URL will return the string "processing" unless the job is done, at 
 # Timing snippet
 
 The following can be run in the processing container:
+
+You can get into a running container with: `docker exec -it image_processor_processor_1 /bin/bash`
+
 ```
 import time
 
