@@ -7,7 +7,7 @@ This stack presents two ways of running:
 1. As a Flask app in the `processing` container which contains all the heavy processing dependencies.
 2. As a Flask app in its own lighter `flask` container which passes the processing to the `processing` container via `rq`
 
-Initially I implemented method (2), until I realised performance was very fast with method (1):  `~1.6` seconds per image conversion on a CPU. However in method (1) when a request comes in a UWSGI worker which handles the request will block.  This is a consideration when scaling, as if you want to handle bulk ingress of images, a CPU core is needed per request, and unavailable while the processing happens.  With method (2) many images can be uploaded quickly, then processing capacity scaled for demand.  With the latter method the endpoint returns a url for the image.  Until processing is complete it currently just returns a string 'processing'. 
+Initially I implemented mode (2), then I realised performance was very fast with mode (1):  `~1.6` seconds per image conversion on a CPU. However in mode (1) when a request comes in a UWSGI worker which handles the request will block.  This is a consideration when scaling, as if you want to handle bulk ingress of images, a CPU core is needed per request, and unavailable while the processing happens.  With mode (2) many images can be uploaded quickly, then processing capacity scaled for demand.  With the latter mode the endpoint returns a url for the image.  Until processing is complete it currently just returns a string 'processing'. 
 
 # Usage:
 
@@ -17,15 +17,15 @@ Clone repo.
     git clone https://github.com/vulcan25/image_processor
     cd image_processor
 
-Grab the weights.  You may have your own.  I used the file from  `pjreddie.com/media/files/yolov3.weights`.  Put this file in the subdirectory `processor/`.  When the `processing` container builds, it copies this in as it then runs the `convert.py` script on the models.  With this method the converted models then become part of the docker image.
+Grab the weights.  You may have your own.  I used the file from  `pjreddie.com/media/files/yolov3.weights`.  Put this file in the subdirectory `processor/`.  When the `processing` container builds, it copies this in as it then runs the `convert.py` script on the models.  With this approach the converted models then become part of the docker image.
 
 Build the containers:
 
     docker-compose -f docker-compose.yml -f with-rq-compose.yml build
 
-## Method (1)...
+## mode (1)...
 
-Launch with method (1) which will expose a Flask app in the `processing` service on `http://localhost:5001`.  This means the Flask app exists on the same container as the image processing dependencies.
+Launch with mode (1) which will expose a Flask app in the `processing` service on `http://localhost:5001`.  This means the Flask app exists on the same container as the image processing dependencies.
 
     docker-compose up
 
@@ -37,11 +37,11 @@ You can also upload a file with:
 
 This returns the processed image.
 
-## Method (2)...
+## mode (2)...
 
 (Make sure you've killed the `docker-compose up` command, or are deploying to a separate environment.)
 
-Launch with method (2) which will aditionally expose a Flask app in the `flask` service on `http://localhost:5000/`:
+Launch with mode (2) which will aditionally expose a Flask app in the `flask` service on `http://localhost:5000/`:
 
 	docker-compose -f docker-compose.yml -f with-rq-compose.yml up
 
