@@ -27,7 +27,7 @@ yolo = custom_yolo()
 
 import time
 
-def process(intput_stream):
+def process(input_stream):
      
      start_time = time.time()
      is_success, output_stream = yolo.detect_img(input_stream)
