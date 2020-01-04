@@ -18,15 +18,19 @@ class custom_yolo(stock_yolo):
         original_image_color = cv2.cvtColor(original_image, cv2.COLOR_BGR2RGB)
 
         r_image, ObjectsList = self.detect_image(original_image_color)
-        return r_image, ObjectsList
+        is_success, output_stream  = cv2.imencode(".jpg", r_image)
+
+        return is_success, output_stream
+        #ObjectsList
+
 yolo = custom_yolo()
-#yolo = custom_yolo()
+
 import time
+
 def process(image_stream):
      
      start_time = time.time()
-     r_image, ObjectList = yolo.detect_img(image_stream)
-     is_success, output_stream  = cv2.imencode(".jpg", r_image)
+     is_success, output_stream = yolo.detect_img(image_stream)
      io_buf = io.BytesIO(output_stream)
 #    return is_success, io_buf.read(), ObjectList
      print("--- %s seconds ---" % (time.time() - start_time))
