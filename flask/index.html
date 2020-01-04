@@ -25,10 +25,10 @@
 	var ul = document.getElementById('list' );
         li = document.createElement('li')
 	var a = document.createElement('a');  
-	var link = document.createTextNode(response['id']);
+	var link = document.createTextNode(response['url']);
 	a.appendChild(link);
 	a.title = response['id'];
-	a.href = "/view/" + response['id'];
+	a.href = response['url'];
 	li.appendChild(a)
 	ul.appendChild(li);
    });

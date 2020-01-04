@@ -1,4 +1,4 @@
-from flask import jsonify, Flask, render_template, send_file
+from flask import jsonify, Flask, render_template, send_file, url_for
 from flask_restful import Resource, Api, reqparse
 import werkzeug, os
 from werkzeug.utils import secure_filename
@@ -31,18 +31,17 @@ class FileUpload(Resource):
                         
         if file and allowed_file(file.filename):
             input_data = file.read()
-            print (input_data)
-            x = img_enqueue(input_data)
-
-            return jsonify({'id':x.id})
+            
+            job = img_enqueue(input_data)
+            return jsonify({'url': url_for('view', job_id=job.id)})
         else:
             return 'not allowed', 403
 
 api.add_resource(FileUpload, '/upload')
 from io import BytesIO
-@app.route('/view/<string:id>')
-def view(id):
-    job = fetch(id)
+@app.route('/view/<string:job_id>')
+def view(job_id):
+    job = fetch(job_id)
     if job.get_status()=='finished':
         completed, data = job.result
         if completed:
