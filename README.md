@@ -11,16 +11,19 @@ Initially I implemented method (2), until I realised performance was very fast w
 
 # Usage:
 
-## Method (1)...
 
 Clone repo.
 
     git clone https://github.com/vulcan25/image_processor
     cd image_processor
 
+Grab the weights.  You may have your own.  I used the file from  `pjreddie.com/media/files/yolov3.weights`.  Put this file in the subdirectory `processor/`.  When the `processing` container builds, it copies this in as it then runs the `convert.py` script on the models.  With this method the converted models then become part of the docker image.
+
 Build the containers:
 
-    docker-compose build
+    docker-compose -f docker-compose.yml -f with-rq-compose.yml build
+
+## Method (1)...
 
 Launch with method (1) which will expose a Flask app in the `processing` service on `http://localhost:5001`.  This means the Flask app exists on the same container as the image processing dependencies.
 

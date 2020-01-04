@@ -1,1 +1,2 @@
- mv yolov3.weights YOLOv3-object-detection-tutorial/YOLOv3-custom-training/model_data/ && python YOLOv3-object-detection-tutorial/YOLOv3-custom-training/convert.py YOLOv3-object-detection-tutorial/YOLOv3-custom-training/model_data/yolov3.cfg YOLOv3-object-detection-tutorial/YOLOv3-custom-training/model_data/yolov3.weights YOLOv3-object-detection-tutorial/YOLOv3-custom-training/model_data/yolo_weights.h5
+python convert.py ./model_data/yolov3.cfg ./model_data/yolov3.weights ./model_data/yolo_weights.h5
+
