@@ -1,0 +1,18 @@
+version: '3'
+
+services:
+  processor:
+    command: rqworker -u redis://redis
+  flask:
+    #image: flask-front
+    build:
+      context: ./flask/
+      dockerfile: Dockerfile
+    tty: True
+    ports:
+      - '5000:5000'
+    command: flask run -h 0.0.0.0
+    # command: gunicorn --bind '0.0.0.0:5000' app:app
+    depends_on:
+      - 'redis'
+
