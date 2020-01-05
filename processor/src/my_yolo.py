@@ -25,6 +25,14 @@ class custom_yolo(stock_yolo):
 yolo = custom_yolo()
 
 import time
+from collections import Counter
+
+def get_object_string(l):
+    # https://stackoverflow.com/a/44418966/2052575
+    new_vals = Counter(l).most_common()
+    new_vals = new_vals[::-1] #this sorts the list in ascending order
+    for a, b in new_vals:
+        yield '%s:%s, ' % (str(a), str(b))
 
 def process(input_stream):
      
@@ -33,8 +41,11 @@ def process(input_stream):
      io_buf = io.BytesIO(output_stream)
      print("--- %s seconds ---" % (time.time() - start_time))
      
+     objects = [d[6] for d in ObjectsList]
+
      info = {'success': is_success,
-             'objects': [d[6] for d in ObjectsList],
+             'objects': objects,
+             'object_string': ' '.join(get_object_string(objects)),
              }
 
      return info, io_buf.read()   

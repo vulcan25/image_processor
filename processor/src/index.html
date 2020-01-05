@@ -25,12 +25,16 @@
    myDropzone.on('success', function (file, response) {
 	// My crappy javascript skillz:
 	var ul = document.getElementById('list' );
-        li = document.createElement('li');
+	li = document.createElement('li');
+
 	var img = document.createElement('img');  
-	   
         img.src = response['id'];	
-	   
+
+	p = document.createElement('p')
+        p.innerText = response['info']['object_string']
+
 	li.appendChild(img);
+	li.appendChild(p)
 	ul.appendChild(li);
    });
 
