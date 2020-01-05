@@ -75,9 +75,9 @@ Viewing this URL will return the string "processing" unless the job is done, at 
 
 # Bug List
 
-- `processor` container image too large at `~3.2GB`
-- `flask/app.py` uses container fs storage (`/tmp`): probably should find a way around this.  Maybe S3 via boto3, or similar.
-- `processor/app.py` doesn't support any storage; everything is handled in memory.  Code could be added to make this store in some manner.
+- `processor` container image too large at `~2.43GB`
+- `flask/src/app.py` uses container fs storage (`/tmp`): probably should find a way around this.  Maybe S3 via boto3, or similar.
+- `processor/src/app.py` doesn't support any storage; everything is handled in memory.  Code could be added to make this store in some manner.
 - `app.py` and `index.html` are similar in the processing and flask service respectivly.  Find a better way to make these more modular.
 
 # Timing snippet
