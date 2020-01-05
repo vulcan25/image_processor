@@ -120,8 +120,8 @@ class YOLO(object):
             box = out_boxes[i]
             score = out_scores[i]
 
-            label = '{} {:.2f}'.format(predicted_class, score)
-            #label = '{}'.format(predicted_class)
+            #label = '{} {:.2f}'.format(predicted_class, score)
+            label = '{}'.format(predicted_class)
             scores = '{:.2f}'.format(score)
 
             top, left, bottom, right = box

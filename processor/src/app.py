@@ -37,7 +37,7 @@ class FileUpload(Resource):
         if file and allowed_file(file.filename):
             # process the upload immediately
             input_data = file.read()
-            complete, data = process(input_data)
+            info, data = process(input_data)
             
             # Create a filename randomly:
             filename = uuid4().__str__()
@@ -49,7 +49,8 @@ class FileUpload(Resource):
 
             r.sadd('files', filename)
 
-            return jsonify({'id': url_for('view', filename=filename)})
+            return jsonify({'id': url_for('view', filename=filename),
+                            'info': info })
         else:
             return 'not allowed', 403
 
