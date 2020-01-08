@@ -24,6 +24,27 @@ class custom_yolo(stock_yolo):
 
 yolo = custom_yolo()
 
+#
+# Redis functionality for an object counter
+
+from redis import StrictRedis
+r = StrictRedis(host='redis', charset="utf-8", decode_responses=True)
+
+def incr_item(object, counter_id = 'default'):
+    """ maitains a count of objects in redis.
+
+    object: something like 'hydrant'
+    counter_id: in future you could create a separate counter
+                based on, for example, a string provided from the frontend
+
+    """
+    hash_name = 'obj_cnt:%s' % counter_id
+    r.hincrby(hash_name, object, 1)
+
+
+#
+# Some utility functions to help prepare the info dict
+
 import time
 from collections import Counter
 
@@ -37,6 +58,10 @@ def get_object_string(l):
 def score_objects(l):
     return {'object': l[6], 'score':  l[7]}
 
+#
+# Main processing function
+from os import environ
+
 def process(input_stream):
      
      start_time = time.time()
@@ -46,6 +71,13 @@ def process(input_stream):
      
      objects = [d[6] for d in ObjectsList]
      scored_objects = [score_objects(d) for d in ObjectsList]
+     
+     # Update redis count
+     count_threshold = environ.get('COUNT_THRESHOLD', 0) # default's to 0 if env var not set
+
+     for item in scored_objects:
+         if float(item['score']) > count_threshold:
+             incr_item(item['object'])
 
      info = {'success': is_success,
              'objects': objects,

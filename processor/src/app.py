@@ -4,7 +4,7 @@ import werkzeug, os
 from werkzeug.utils import secure_filename
 
 from redis import StrictRedis
-r = StrictRedis(host='redis', charset="utf-8", decode_responses=True, db=2)
+r = StrictRedis(host='redis', charset="utf-8", decode_responses=True)
 
 app = Flask(__name__, template_folder='.')
 api = Api(app)
@@ -68,6 +68,15 @@ def view(filename):
 @app.route('/', methods=['GET'])
 def index():
     return render_template('index.html')
+
+# Redis count endpoint:
+
+@app.route('/counts', methods=['GET'])
+def counts():
+    all_counts = r.hgetall('obj_cnt:default')
+    return jsonify(all_counts)
+    # More work needed here, possibly to add a relevant template, etc
+    
 
 if __name__ == '__main__':
     app.run(debug=True)
