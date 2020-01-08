@@ -34,6 +34,9 @@ def get_object_string(l):
     for a, b in new_vals:
         yield '%s:%s, ' % (str(a), str(b))
 
+def score_objects(l):
+    return {'object': l[6], 'score':  l[7]}
+
 def process(input_stream):
      
      start_time = time.time()
@@ -42,10 +45,12 @@ def process(input_stream):
      print("--- %s seconds ---" % (time.time() - start_time))
      
      objects = [d[6] for d in ObjectsList]
+     scored_objects = [score_objects(d) for d in ObjectsList]
 
      info = {'success': is_success,
              'objects': objects,
              'object_string': ' '.join(get_object_string(objects)),
+             'scored_objects': scored_objects,
              }
 
      return info, io_buf.read()   
