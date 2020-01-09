@@ -1,7 +1,7 @@
 from telegram.ext import Updater, CallbackContext, CommandHandler, CallbackQueryHandler, MessageHandler, Filters
 from functools import wraps
 from io import BytesIO
-from telegram import Update
+from telegram import Update, ChatAction
 
 import os
 import random
@@ -35,6 +35,19 @@ def restricted(func):
         return func(update, context, *args, **kwargs)
     return wrapped
 
+#
+# Chat action, makes teh bot look like it's typing, etc.
+def send_action(action):
+    """Sends `action` while processing func command."""
+
+    def decorator(func):
+        @wraps(func)
+        def command_func(*args, **kwargs):
+            update, context = args
+            context.bot.send_chat_action(chat_id=update.effective_message.chat_id, action=action)
+            return func(update, context, **kwargs)
+        return command_func
+    return decorator
 
 """ Bots should implement a `/start` command """
 @restricted
@@ -66,6 +79,7 @@ def upload(file_obj):
     return req.json()
 
 """ This one handles the photo transfer from telegram. """
+@send_action(ChatAction.TYPING)
 @restricted
 def photo(update: Update, context: CallbackContext):
 
