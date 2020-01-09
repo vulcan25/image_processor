@@ -9,4 +9,6 @@ services:
     tty: True
     env_file:
       - .telegram-env
+    depends_on:
+      - 'processor'
 
