@@ -54,14 +54,15 @@ def echo(update: Update, context: CallbackContext):
 """ A function to utilise the image_processor API """
 def upload(file_obj):
     headers={'ContentType': 'multipart/form-data'}
-    files = {'file': ('tg-upload.txt', file_obj, 'image/jpeg')}
+    files = {'file': ('tg-upload.jpg', file_obj, 'image/jpeg')}
 
     # TODO: Set this URL via env var
     url='http://processor:5000/upload'
 
     req = requests.post(url, files=files)
     
-    print (req.content)
+    #print (req.content)
+    
     return req.json()
 
 """ This one handles the photo transfer from telegram. """
@@ -79,11 +80,13 @@ def photo(update: Update, context: CallbackContext):
     print ('about to query image_processor API')
         
     result = upload(f)
+    print ('RESULT: ', result)
 
-    if 'object_string' in result:
-        response = '%s%s' % (beginning(), result['object_string'])
-    else:
-        response = "I couldn't see anything in that image."
+    if 'info' in result:
+        if len(result['info']['objects']) > 0:
+            response = '%s%s' % (beginning(), result['info']['object_string'])
+        else:
+            response = "I couldn't see anything in that image."
 
     context.bot.send_message(chat_id=update.message.chat_id, text=response)
 
