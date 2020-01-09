@@ -1,0 +1,12 @@
+version: '3'
+
+services:
+  telegram:
+    build:
+      context: ./tg/
+      dockerfile: Dockerfile
+    command: python ./tg_client.py
+    tty: True
+    env_file:
+      - .telegram-env
+
