@@ -58,17 +58,23 @@ def get_object_string(l):
 def score_objects(l):
     return {'object': l[6], 'score':  l[7]}
 
+def time_since(start):
+    return round(time.time() - start, 3)
 #
 # Main processing function
 from os import environ
 
 def process(input_stream):
      
+     timings = ''
      start_time = time.time()
+
      is_success, output_stream, ObjectsList  = yolo.detect_img(input_stream)
      io_buf = io.BytesIO(output_stream)
-     print("--- %s seconds ---" % (time.time() - start_time))
      
+     timings += 'detect_img: %ss, ' % (time_since(start_time))
+     processing_finished = time.time()
+
      objects = [d[6] for d in ObjectsList]
      scored_objects = [score_objects(d) for d in ObjectsList]
      
@@ -84,6 +90,10 @@ def process(input_stream):
              'object_string': ' '.join(get_object_string(objects)),
              'scored_objects': scored_objects,
              }
+
+     timings += 'meta: %ss, ' % (time_since(processing_finished))
+
+     info['timings'] = timings
 
      return info, io_buf.read()   
 
