@@ -56,7 +56,18 @@ def get_object_string(l):
         yield '%s:%s, ' % (str(a), str(b))
 
 def score_objects(l):
-    return {'object': l[6], 'score':  l[7]}
+    # Translate the object list from image_detect.py
+    # TODO: decied if image_detect should actually return this dict instead of 
+    # a list.
+    # [top, left, bottom, right, mid_v, mid_h, label, scores]
+    return {'object': l[6], 'score':  l[7],
+            'top': l[0].item(),
+            'left': l[1].item(),
+            'bottom': l[2].item(),
+            'right': l[3].item(),
+            'mid_v': l[4].item(),
+            'mid_h': l[5].item(),
+            }
 
 def time_since(start):
     return round(time.time() - start, 3)
