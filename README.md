@@ -29,6 +29,10 @@ Launch with mode (1) which will expose a Flask app in the `processor` service on
 
     docker-compose up
 
+By default this launches with gunicorn.  To enable flask development mode, and live reloader launch with:
+
+    docker-compose -f docker-compose.yml -f docker-compose-dev.yml up
+
 When you connect to the web-interface it uses dropzone.js on the frontend for the "drop-here" interface, the proccessed image is then displayed on the page.  Be aware that dropzone is loaded from CDNJS. I have written some simple javascript to manipulate the page.
 
 You can also upload a file with: 
@@ -37,7 +41,7 @@ You can also upload a file with:
 
 This returns the processed image.
 
-## mode (2)...
+## mode (2)... (this is out of maintenence at the moment due to a bug - milage may vary)
 
 (Make sure you've killed the `docker-compose up` command, or are deploying to a separate environment.)
 

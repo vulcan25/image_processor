@@ -1,7 +1,7 @@
 from image_detect import YOLO as stock_yolo
-stock_yolo._defaults['model_path']= 'model_data/yolo_weights.h5'
-stock_yolo._defaults['anchors_path']= 'model_data/yolo_anchors.txt'
-stock_yolo._defaults['classes_path']='model_data/coco_classes.txt'
+stock_yolo._defaults['model_path']= '/model_data/yolo_weights.h5'
+stock_yolo._defaults['anchors_path']= '/model_data/yolo_anchors.txt'
+stock_yolo._defaults['classes_path']='/model_data/coco_classes.txt'
 import cv2
 import io
 import numpy

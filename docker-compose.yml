@@ -8,10 +8,11 @@ services:
     build:
       context: ./processor/
       dockerfile: Dockerfile
-    command: flask run -h 0.0.0.0
+    command: gunicorn --bind '0.0.0.0:5000' app:app
     ports:
       - '5001:5000'
-    
+    environment:
+      - FLASK_ENV=production
     depends_on:
       - 'redis'
 
