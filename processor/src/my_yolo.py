@@ -60,6 +60,9 @@ def score_objects(l):
     # TODO: decied if image_detect should actually return this dict instead of 
     # a list.
     # [top, left, bottom, right, mid_v, mid_h, label, scores]
+    for a in l:
+        print (a,type(a))
+
     return {'object': l[6], 'score':  l[7],
             'top': l[0].item(),
             'left': l[1].item(),
